@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/addinedu/amr_ws/pinkbot/install/minibot_controllers/include/**",
+        "/home/addinedu/amr_ws/pinkbot/install/minibot_interfaces/include/**",
+        "/home/addinedu/amr_ws/pinkbot/install/minibot_hardware_interface/include/**",
+        "/opt/ros/humble/include/**",
+        "/home/addinedu/test/test_project/src/test_package_msg/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

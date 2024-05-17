@@ -1,0 +1,1 @@
+string kiosk_location

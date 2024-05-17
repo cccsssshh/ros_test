@@ -1,0 +1,2 @@
+Invoking command in '/home/addinedu/test/test_project/build/test_package_msg': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/addinedu/test/test_project/install/test_package:/opt/ros/humble /usr/bin/cmake --build /home/addinedu/test/test_project/build/test_package_msg -- -j12 -l12
+Invoked command in '/home/addinedu/test/test_project/build/test_package_msg' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/addinedu/test/test_project/install/test_package:/opt/ros/humble /usr/bin/cmake --build /home/addinedu/test/test_project/build/test_package_msg -- -j12 -l12

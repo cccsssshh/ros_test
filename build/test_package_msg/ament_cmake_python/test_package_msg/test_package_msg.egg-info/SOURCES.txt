@@ -1,0 +1,8 @@
+setup.py
+test_package_msg/__init__.py
+test_package_msg.egg-info/PKG-INFO
+test_package_msg.egg-info/SOURCES.txt
+test_package_msg.egg-info/dependency_links.txt
+test_package_msg.egg-info/top_level.txt
+test_package_msg/srv/__init__.py
+test_package_msg/srv/_tcp.py

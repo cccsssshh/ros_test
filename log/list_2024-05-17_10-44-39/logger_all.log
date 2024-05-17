@@ -1,0 +1,66 @@
+[0.100s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'list', '-p', '--base-paths', '/home/addinedu/test/test_project']
+[0.100s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='list', build_base='build', ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['/home/addinedu/test/test_project'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], topological_order=False, names_only=False, paths_only=True, topological_graph=False, topological_graph_dot=False, topological_graph_density=False, topological_graph_legend=False, topological_graph_dot_cluster=False, topological_graph_dot_include_skipped=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x713379471fc0>, verb_extension=<colcon_package_information.verb.list.ListVerb object at 0x713379470be0>, main=<bound method ListVerb.main of <colcon_package_information.verb.list.ListVerb object at 0x713379470be0>>, mixin_verb=('list',))
+[0.137s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.137s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.137s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.137s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.137s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.137s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/addinedu/test/test_project'
+[0.137s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project) by extensions ['ignore', 'ignore_ament_install']
+[0.137s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project) by extension 'ignore'
+[0.137s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project) by extension 'ignore_ament_install'
+[0.137s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project) by extensions ['colcon_pkg']
+[0.137s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project) by extension 'colcon_pkg'
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project) by extensions ['colcon_meta']
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project) by extension 'colcon_meta'
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project) by extensions ['ros']
+[0.138s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project) by extension 'ros'
+[0.151s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project) by extensions ['cmake', 'python']
+[0.151s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project) by extension 'cmake'
+[0.151s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project) by extension 'python'
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project) by extensions ['python_setup_py']
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project) by extension 'python_setup_py'
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/build) by extensions ['ignore', 'ignore_ament_install']
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/build) by extension 'ignore'
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/build) ignored
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/install) by extensions ['ignore', 'ignore_ament_install']
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/install) by extension 'ignore'
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/install) ignored
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/log) by extensions ['ignore', 'ignore_ament_install']
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/log) by extension 'ignore'
+[0.152s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/log) ignored
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src) by extensions ['ignore', 'ignore_ament_install']
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src) by extension 'ignore'
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src) by extension 'ignore_ament_install'
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src) by extensions ['colcon_pkg']
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src) by extension 'colcon_pkg'
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src) by extensions ['colcon_meta']
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src) by extension 'colcon_meta'
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src) by extensions ['ros']
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src) by extension 'ros'
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src) by extensions ['cmake', 'python']
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src) by extension 'cmake'
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src) by extension 'python'
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src) by extensions ['python_setup_py']
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src) by extension 'python_setup_py'
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package) by extensions ['ignore', 'ignore_ament_install']
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package) by extension 'ignore'
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package) by extension 'ignore_ament_install'
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package) by extensions ['colcon_pkg']
+[0.153s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package) by extension 'colcon_pkg'
+[0.154s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package) by extensions ['colcon_meta']
+[0.154s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package) by extension 'colcon_meta'
+[0.154s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package) by extensions ['ros']
+[0.154s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package) by extension 'ros'
+[0.156s] DEBUG:colcon.colcon_core.package_identification:Package '/home/addinedu/test/test_project/src/test_package' with type 'ros.ament_python' and name 'test_package'
+[0.156s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package_msg) by extensions ['ignore', 'ignore_ament_install']
+[0.156s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package_msg) by extension 'ignore'
+[0.156s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package_msg) by extension 'ignore_ament_install'
+[0.156s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package_msg) by extensions ['colcon_pkg']
+[0.157s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package_msg) by extension 'colcon_pkg'
+[0.157s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package_msg) by extensions ['colcon_meta']
+[0.157s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package_msg) by extension 'colcon_meta'
+[0.157s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package_msg) by extensions ['ros']
+[0.157s] Level 1:colcon.colcon_core.package_identification:_identify(/home/addinedu/test/test_project/src/test_package_msg) by extension 'ros'
+[0.157s] DEBUG:colcon.colcon_core.package_identification:Package '/home/addinedu/test/test_project/src/test_package_msg' with type 'ros.ament_cmake' and name 'test_package_msg'
+[0.157s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults

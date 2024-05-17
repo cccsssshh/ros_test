@@ -1,0 +1,3 @@
+[console_scripts]
+control_tower = test_package.control_tower:main
+tcp_node = test_package.TcpNode:main
