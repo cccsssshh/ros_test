@@ -250,13 +250,22 @@ test_package_msg__srv__Tcp_Request__Sequence__copy(
 }
 
 
+// Include directives for member types
+// Member `response`
+// already included above
+// #include "rosidl_runtime_c/string_functions.h"
+
 bool
 test_package_msg__srv__Tcp_Response__init(test_package_msg__srv__Tcp_Response * msg)
 {
   if (!msg) {
     return false;
   }
-  // structure_needs_at_least_one_member
+  // response
+  if (!rosidl_runtime_c__String__init(&msg->response)) {
+    test_package_msg__srv__Tcp_Response__fini(msg);
+    return false;
+  }
   return true;
 }
 
@@ -266,7 +275,8 @@ test_package_msg__srv__Tcp_Response__fini(test_package_msg__srv__Tcp_Response * 
   if (!msg) {
     return;
   }
-  // structure_needs_at_least_one_member
+  // response
+  rosidl_runtime_c__String__fini(&msg->response);
 }
 
 bool
@@ -275,8 +285,10 @@ test_package_msg__srv__Tcp_Response__are_equal(const test_package_msg__srv__Tcp_
   if (!lhs || !rhs) {
     return false;
   }
-  // structure_needs_at_least_one_member
-  if (lhs->structure_needs_at_least_one_member != rhs->structure_needs_at_least_one_member) {
+  // response
+  if (!rosidl_runtime_c__String__are_equal(
+      &(lhs->response), &(rhs->response)))
+  {
     return false;
   }
   return true;
@@ -290,8 +302,12 @@ test_package_msg__srv__Tcp_Response__copy(
   if (!input || !output) {
     return false;
   }
-  // structure_needs_at_least_one_member
-  output->structure_needs_at_least_one_member = input->structure_needs_at_least_one_member;
+  // response
+  if (!rosidl_runtime_c__String__copy(
+      &(input->response), &(output->response)))
+  {
+    return false;
+  }
   return true;
 }
 

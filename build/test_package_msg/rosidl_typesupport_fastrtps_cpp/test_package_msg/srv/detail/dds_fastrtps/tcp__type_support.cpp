@@ -247,8 +247,8 @@ cdr_serialize(
   const test_package_msg::srv::Tcp_Response & ros_message,
   eprosima::fastcdr::Cdr & cdr)
 {
-  // Member: structure_needs_at_least_one_member
-  cdr << ros_message.structure_needs_at_least_one_member;
+  // Member: response
+  cdr << ros_message.response;
   return true;
 }
 
@@ -258,8 +258,8 @@ cdr_deserialize(
   eprosima::fastcdr::Cdr & cdr,
   test_package_msg::srv::Tcp_Response & ros_message)
 {
-  // Member: structure_needs_at_least_one_member
-  cdr >> ros_message.structure_needs_at_least_one_member;
+  // Member: response
+  cdr >> ros_message.response;
 
   return true;
 }
@@ -277,12 +277,10 @@ get_serialized_size(
   (void)padding;
   (void)wchar_size;
 
-  // Member: structure_needs_at_least_one_member
-  {
-    size_t item_size = sizeof(ros_message.structure_needs_at_least_one_member);
-    current_alignment += item_size +
-      eprosima::fastcdr::Cdr::alignment(current_alignment, item_size);
-  }
+  // Member: response
+  current_alignment += padding +
+    eprosima::fastcdr::Cdr::alignment(current_alignment, padding) +
+    (ros_message.response.size() + 1);
 
   return current_alignment - initial_alignment;
 }
@@ -307,12 +305,17 @@ max_serialized_size_Tcp_Response(
   is_plain = true;
 
 
-  // Member: structure_needs_at_least_one_member
+  // Member: response
   {
     size_t array_size = 1;
 
-    last_member_size = array_size * sizeof(uint8_t);
-    current_alignment += array_size * sizeof(uint8_t);
+    full_bounded = false;
+    is_plain = false;
+    for (size_t index = 0; index < array_size; ++index) {
+      current_alignment += padding +
+        eprosima::fastcdr::Cdr::alignment(current_alignment, padding) +
+        1;
+    }
   }
 
   size_t ret_val = current_alignment - initial_alignment;
@@ -323,7 +326,7 @@ max_serialized_size_Tcp_Response(
     using DataType = test_package_msg::srv::Tcp_Response;
     is_plain =
       (
-      offsetof(DataType, structure_needs_at_least_one_member) +
+      offsetof(DataType, response) +
       last_member_size
       ) == ret_val;
   }

@@ -40,10 +40,15 @@ typedef struct test_package_msg__srv__Tcp_Request__Sequence
 
 // Constants defined in the message
 
+// Include directives for member types
+// Member 'response'
+// already included above
+// #include "rosidl_runtime_c/string.h"
+
 /// Struct defined in srv/Tcp in the package test_package_msg.
 typedef struct test_package_msg__srv__Tcp_Response
 {
-  uint8_t structure_needs_at_least_one_member;
+  rosidl_runtime_c__String response;
 } test_package_msg__srv__Tcp_Response;
 
 // Struct for a sequence of test_package_msg__srv__Tcp_Response.

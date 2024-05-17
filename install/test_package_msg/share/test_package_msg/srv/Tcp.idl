@@ -9,7 +9,7 @@ module test_package_msg {
       string kiosk_location;
     };
     struct Tcp_Response {
-      uint8 structure_needs_at_least_one_member;
+      string response;
     };
   };
 };

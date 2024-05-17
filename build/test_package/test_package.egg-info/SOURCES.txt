@@ -15,6 +15,7 @@ test/test_pep257.py
 test_package/KioskManager.py
 test_package/StoreManager.py
 test_package/TcpNode.py
+test_package/TestNode.py
 test_package/__init__.py
 test_package/control_tower.py
 test_package/test.py

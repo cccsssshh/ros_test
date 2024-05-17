@@ -126,6 +126,11 @@ PyObject * test_package_msg__srv__tcp__request__convert_to_py(void * raw_ros_mes
 // already included above
 // #include "test_package_msg/srv/detail/tcp__functions.h"
 
+// already included above
+// #include "rosidl_runtime_c/string.h"
+// already included above
+// #include "rosidl_runtime_c/string_functions.h"
+
 
 ROSIDL_GENERATOR_C_EXPORT
 bool test_package_msg__srv__tcp__response__convert_from_py(PyObject * _pymsg, void * _ros_message)
@@ -160,7 +165,21 @@ bool test_package_msg__srv__tcp__response__convert_from_py(PyObject * _pymsg, vo
     assert(strncmp("test_package_msg.srv._tcp.Tcp_Response", full_classname_dest, 38) == 0);
   }
   test_package_msg__srv__Tcp_Response * ros_message = _ros_message;
-  ros_message->structure_needs_at_least_one_member = 0;
+  {  // response
+    PyObject * field = PyObject_GetAttrString(_pymsg, "response");
+    if (!field) {
+      return false;
+    }
+    assert(PyUnicode_Check(field));
+    PyObject * encoded_field = PyUnicode_AsUTF8String(field);
+    if (!encoded_field) {
+      Py_DECREF(field);
+      return false;
+    }
+    rosidl_runtime_c__String__assign(&ros_message->response, PyBytes_AS_STRING(encoded_field));
+    Py_DECREF(encoded_field);
+    Py_DECREF(field);
+  }
 
   return true;
 }
@@ -182,7 +201,24 @@ PyObject * test_package_msg__srv__tcp__response__convert_to_py(void * raw_ros_me
       return NULL;
     }
   }
-  (void)raw_ros_message;
+  test_package_msg__srv__Tcp_Response * ros_message = (test_package_msg__srv__Tcp_Response *)raw_ros_message;
+  {  // response
+    PyObject * field = NULL;
+    field = PyUnicode_DecodeUTF8(
+      ros_message->response.data,
+      strlen(ros_message->response.data),
+      "replace");
+    if (!field) {
+      return NULL;
+    }
+    {
+      int rc = PyObject_SetAttrString(_pymessage, "response", field);
+      Py_DECREF(field);
+      if (rc) {
+        return NULL;
+      }
+    }
+  }
 
   // ownership of _pymessage is transferred to the caller
   return _pymessage;

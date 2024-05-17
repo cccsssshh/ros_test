@@ -1,4 +1,4 @@
-# Install script for directory: /home/addinedu/test/test_project/src/test_package_msg
+# Install script for directory: /home/addinedu/test/test_project/src/test_package_msgs
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -360,7 +360,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/test_package_msg/srv" TYPE FILE FILES "/home/addinedu/test/test_project/src/test_package_msg/srv/Tcp.srv")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/test_package_msg/srv" TYPE FILE FILES "/home/addinedu/test/test_project/src/test_package_msgs/srv/Tcp.srv")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
@@ -623,7 +623,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/test_package_msg" TYPE FILE FILES "/home/addinedu/test/test_project/src/test_package_msg/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/test_package_msg" TYPE FILE FILES "/home/addinedu/test/test_project/src/test_package_msgs/package.xml")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)

@@ -32,8 +32,6 @@ class KioskServer():
                         cmd, data = data.decode().split(',', 1)
                         print(data)
 
-                        processed_data = self.process_data(cmd, data)
-                        self.node.set_data(processed_data)
                         if cmd == 'OR':
                             target_ip = '192.168.0.10' #나중에 SQL로 가져오기
                             target_client = None
@@ -51,7 +49,9 @@ class KioskServer():
                             else:
                                 print(f"No client found with IP {target_ip}")
                                 conn.sendall(f"No client found with IP {target_ip}".encode())
-                        elif cmd == 'GD': 
+                            data_list = data.split(',')
+                            self.node.send_request(data_list[1])
+                        elif cmd == 'GD':
                             print("출발시간요청 : ")
                             print(data)
                             #data=UID 로 추후에 SQL로 탑승시간 보내주기
@@ -76,23 +76,6 @@ class KioskServer():
                 self.clients.remove(conn)
             conn.close()
 
-    def process_data(self, cmd, data):
-        print(f"Processing data: cmd={cmd}, data={data}")
-        data_list = data.split(',')
-        if cmd == 'OR':
-            # 데이터 처리 로직 추가
-            self.node.get_logger().info("cmd : OR")
-            return data_list[1]
-        elif cmd == 'GD':
-            # 데이터 처리 로직 추가
-            print("Departure time requested")
-            return "09:25"
-        elif cmd == 'OI':
-            # 데이터 처리 로직 추가
-            return "Order: A1,2"
-        else:
-            print("Unknown command")
-            return "Unknown command"
 
     def start_server(self):
         try:

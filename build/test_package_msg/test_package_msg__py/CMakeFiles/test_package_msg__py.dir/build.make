@@ -53,7 +53,7 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/addinedu/test/test_project/src/test_package_msg
+CMAKE_SOURCE_DIR = /home/addinedu/test/test_project/src/test_package_msgs
 
 # The top-level build directory on which CMake was run.
 CMAKE_BINARY_DIR = /home/addinedu/test/test_project/build/test_package_msg
@@ -124,6 +124,6 @@ test_package_msg__py/CMakeFiles/test_package_msg__py.dir/clean:
 .PHONY : test_package_msg__py/CMakeFiles/test_package_msg__py.dir/clean
 
 test_package_msg__py/CMakeFiles/test_package_msg__py.dir/depend:
-	cd /home/addinedu/test/test_project/build/test_package_msg && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/addinedu/test/test_project/src/test_package_msg /home/addinedu/test/test_project/build/test_package_msg/test_package_msg__py /home/addinedu/test/test_project/build/test_package_msg /home/addinedu/test/test_project/build/test_package_msg/test_package_msg__py /home/addinedu/test/test_project/build/test_package_msg/test_package_msg__py/CMakeFiles/test_package_msg__py.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/addinedu/test/test_project/build/test_package_msg && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/addinedu/test/test_project/src/test_package_msgs /home/addinedu/test/test_project/build/test_package_msg/test_package_msg__py /home/addinedu/test/test_project/build/test_package_msg /home/addinedu/test/test_project/build/test_package_msg/test_package_msg__py /home/addinedu/test/test_project/build/test_package_msg/test_package_msg__py/CMakeFiles/test_package_msg__py.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : test_package_msg__py/CMakeFiles/test_package_msg__py.dir/depend
 

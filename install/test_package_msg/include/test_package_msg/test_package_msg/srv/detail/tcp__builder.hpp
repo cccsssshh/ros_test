@@ -60,6 +60,26 @@ namespace test_package_msg
 namespace srv
 {
 
+namespace builder
+{
+
+class Init_Tcp_Response_response
+{
+public:
+  Init_Tcp_Response_response()
+  : msg_(::rosidl_runtime_cpp::MessageInitialization::SKIP)
+  {}
+  ::test_package_msg::srv::Tcp_Response response(::test_package_msg::srv::Tcp_Response::_response_type arg)
+  {
+    msg_.response = std::move(arg);
+    return std::move(msg_);
+  }
+
+private:
+  ::test_package_msg::srv::Tcp_Response msg_;
+};
+
+}  // namespace builder
 
 }  // namespace srv
 
@@ -70,7 +90,7 @@ template<>
 inline
 auto build<::test_package_msg::srv::Tcp_Response>()
 {
-  return ::test_package_msg::srv::Tcp_Response(rosidl_runtime_cpp::MessageInitialization::ZERO);
+  return test_package_msg::srv::builder::Init_Tcp_Response_response();
 }
 
 }  // namespace test_package_msg

@@ -1,6 +1,6 @@
 {
   "package_name": "test_package_msg",
   "non_idl_tuples": [
-    "/home/addinedu/test/test_project/src/test_package_msg:srv/Tcp.srv"
+    "/home/addinedu/test/test_project/src/test_package_msgs:srv/Tcp.srv"
   ]
 }

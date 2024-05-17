@@ -21,7 +21,8 @@ setup(
     entry_points={
         'console_scripts': [
             "tcp_node = test_package.TcpNode:main",
-            "control_tower = test_package.control_tower:main"
+            "control_tower = test_package.control_tower:main",
+            "test_service_node = test_package.TestNode:main"
         ],
     },
 )

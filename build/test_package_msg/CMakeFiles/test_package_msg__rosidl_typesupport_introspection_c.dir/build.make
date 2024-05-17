@@ -53,7 +53,7 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/addinedu/test/test_project/src/test_package_msg
+CMAKE_SOURCE_DIR = /home/addinedu/test/test_project/src/test_package_msgs
 
 # The top-level build directory on which CMake was run.
 CMAKE_BINARY_DIR = /home/addinedu/test/test_project/build/test_package_msg
@@ -125,6 +125,6 @@ CMakeFiles/test_package_msg__rosidl_typesupport_introspection_c.dir/clean:
 
 CMakeFiles/test_package_msg__rosidl_typesupport_introspection_c.dir/depend: rosidl_typesupport_introspection_c/test_package_msg/srv/detail/tcp__rosidl_typesupport_introspection_c.h
 CMakeFiles/test_package_msg__rosidl_typesupport_introspection_c.dir/depend: rosidl_typesupport_introspection_c/test_package_msg/srv/detail/tcp__type_support.c
-	cd /home/addinedu/test/test_project/build/test_package_msg && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/addinedu/test/test_project/src/test_package_msg /home/addinedu/test/test_project/src/test_package_msg /home/addinedu/test/test_project/build/test_package_msg /home/addinedu/test/test_project/build/test_package_msg /home/addinedu/test/test_project/build/test_package_msg/CMakeFiles/test_package_msg__rosidl_typesupport_introspection_c.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/addinedu/test/test_project/build/test_package_msg && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/addinedu/test/test_project/src/test_package_msgs /home/addinedu/test/test_project/src/test_package_msgs /home/addinedu/test/test_project/build/test_package_msg /home/addinedu/test/test_project/build/test_package_msg /home/addinedu/test/test_project/build/test_package_msg/CMakeFiles/test_package_msg__rosidl_typesupport_introspection_c.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/test_package_msg__rosidl_typesupport_introspection_c.dir/depend
 

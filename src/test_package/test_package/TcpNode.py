@@ -1,44 +1,42 @@
-import os
-import sys
-
 import rclpy as rp
-from rclpy.qos import QoSProfile
+
 from rclpy.node import Node
-from std_msgs.msg import String
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
+
+from test_package_msg.srv import Tcp
 
 class TcpNode(Node):
     def __init__(self):
         super().__init__('tcp_node')
 
-        qos_profile = QoSProfile(depth=10)
-        self.tcp_publisher = self.create_publisher(String, 'test_data', qos_profile)
-        self.timer = self.create_timer(1.0, self.tcp_publish)
+        self.tcp_client = self.create_client(Tcp, 'tcp_string')
+        while not self.tcp_client.wait_for_service(timeout_sec=1.0):
+            self.get_logger().info('Service not available, waiting again...')
+        self.req = Tcp.Request()
 
         self.data = None
 
-    def tcp_publish(self):
-        if self.data is not None:
-            msg = String()
-            msg.data = self.data  # 데이터가 문자열인지 확인하고 변환
-            self.tcp_publisher.publish(msg)
-            self.get_logger().info(f"Published message: {self.data}")
-            # self.data = None  # 데이터가 한 번 발행된 후 초기화
+    def send_request(self, string):
+        self.req.kiosk_location = string
+        self.future = self.tcp_client.call_async(self.req)
+        self.future.add_done_callback(self.handle_response)
 
-    def set_data(self, data):
-        self.data = data
-        self.get_logger().info(f"received data : {data}")
-        
-
+    def handle_response(self, future):
+        try:
+            response = future.result()
+            self.get_logger().info('Service call succeeded: %s' % response.response)
+        except Exception as e:
+            self.get_logger().error('Service call failed: %r' % e)
 
 def main(args=None):
     rp.init(args=args)
-    node = TcpNode()
 
-    rp.spin(node)
+    tcp_node = TcpNode()
+    rp.spin(tcp_node)
+
+    tcp_node.destroy_node()
     rp.shutdown()
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

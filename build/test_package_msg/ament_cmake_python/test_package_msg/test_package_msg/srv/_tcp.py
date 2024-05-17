@@ -127,6 +127,9 @@ class Tcp_Request(metaclass=Metaclass_Tcp_Request):
 # Import statements for member types
 
 # already imported above
+# import builtins
+
+# already imported above
 # import rosidl_parser.definition
 
 
@@ -175,18 +178,22 @@ class Tcp_Response(metaclass=Metaclass_Tcp_Response):
     """Message class 'Tcp_Response'."""
 
     __slots__ = [
+        '_response',
     ]
 
     _fields_and_field_types = {
+        'response': 'string',
     }
 
     SLOT_TYPES = (
+        rosidl_parser.definition.UnboundedString(),  # noqa: E501
     )
 
     def __init__(self, **kwargs):
         assert all('_' + key in self.__slots__ for key in kwargs.keys()), \
             'Invalid arguments passed to constructor: %s' % \
             ', '.join(sorted(k for k in kwargs.keys() if '_' + k not in self.__slots__))
+        self.response = kwargs.get('response', str())
 
     def __repr__(self):
         typename = self.__class__.__module__.split('.')
@@ -217,12 +224,27 @@ class Tcp_Response(metaclass=Metaclass_Tcp_Response):
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
+        if self.response != other.response:
+            return False
         return True
 
     @classmethod
     def get_fields_and_field_types(cls):
         from copy import copy
         return copy(cls._fields_and_field_types)
+
+    @builtins.property
+    def response(self):
+        """Message field 'response'."""
+        return self._response
+
+    @response.setter
+    def response(self, value):
+        if __debug__:
+            assert \
+                isinstance(value, str), \
+                "The 'response' field must be of type 'str'"
+        self._response = value
 
 
 class Metaclass_Tcp(type):

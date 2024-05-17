@@ -104,6 +104,11 @@ ROSIDL_TYPESUPPORT_INTERFACE__MESSAGE_SYMBOL_NAME(rosidl_typesupport_introspecti
 // #include "test_package_msg/srv/detail/tcp__struct.h"
 
 
+// Include directives for member types
+// Member `response`
+// already included above
+// #include "rosidl_runtime_c/string_functions.h"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -125,14 +130,14 @@ void test_package_msg__srv__Tcp_Response__rosidl_typesupport_introspection_c__Tc
 
 static rosidl_typesupport_introspection_c__MessageMember test_package_msg__srv__Tcp_Response__rosidl_typesupport_introspection_c__Tcp_Response_message_member_array[1] = {
   {
-    "structure_needs_at_least_one_member",  // name
-    rosidl_typesupport_introspection_c__ROS_TYPE_UINT8,  // type
+    "response",  // name
+    rosidl_typesupport_introspection_c__ROS_TYPE_STRING,  // type
     0,  // upper bound of string
     NULL,  // members of sub message
     false,  // is array
     0,  // array size
     false,  // is upper bound
-    offsetof(test_package_msg__srv__Tcp_Response, structure_needs_at_least_one_member),  // bytes offset in struct
+    offsetof(test_package_msg__srv__Tcp_Response, response),  // bytes offset in struct
     NULL,  // default value
     NULL,  // size() function pointer
     NULL,  // get_const(index) function pointer
