@@ -22,7 +22,12 @@ setup(
         'console_scripts': [
             "tcp_node = test_package.TcpNode:main",
             "control_tower = test_package.control_tower:main",
-            "test_service_node = test_package.TestNode:main"
+            "test_service_node = test_package.TestNode:main",
+            "action_server = test_package.action_server:main",
+            "action_client = test_package.action_client:main",
+            "test = test_package.test:main",
+            "middle_server = test_package.middle_server:main",
+            "amcl_server = test_package.amcl_server:main",
         ],
     },
 )

@@ -1,0 +1,11 @@
+# Name of the domain bridge, used for node naming and logging
+name: my_bridge
+from_domain: 1
+to_domain: 2
+topics:
+  fibonacci_goal:
+    type: test_package_msgs/action/Fibonacci_Goal
+  fibonacci_result:
+    type: test_package_msgs/action/Fibonacci_Result
+  fibonacci_feedback:
+    type: test_package_msgs/action/Fibonacci_Feedback

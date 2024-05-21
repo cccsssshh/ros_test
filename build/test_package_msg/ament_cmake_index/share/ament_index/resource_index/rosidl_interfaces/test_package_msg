@@ -1,4 +1,0 @@
-srv/Tcp.idl
-srv/Tcp.srv
-srv/Tcp_Request.msg
-srv/Tcp_Response.msg

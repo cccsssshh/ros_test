@@ -1,1 +1,0 @@
-string kiosk_location
