@@ -15,7 +15,9 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/Tcp.srv"
-  "action/Fibonacci.action"
+  "srv/Navgoal.srv"
+  "srv/Navresult.srv"
+  "msg/Navfeedback.msg"
 )
 
 
