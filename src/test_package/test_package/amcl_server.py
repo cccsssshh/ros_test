@@ -15,6 +15,7 @@ class AmclServer(BasicNavigator):
 
         self.pose_sub = self.create_subscription(PoseWithCovarianceStamped, "/amcl_pose", self.amcl_callback, 10)
 
+
     def amcl_callback(self, msg):
         self.get_logger().info('Received pose: Position (%f, %f, %f)' % (
             msg.pose.pose.position.x,
