@@ -26,7 +26,7 @@ setup(
             "action_server = test_package.action_server:main",
             "action_client = test_package.action_client:main",
             "test = test_package.test:main",
-            "middle_server = test_package.middle_server:main",
+            "robot_control = test_package.robot_control:main",
             "amcl_client = test_package.amcl_client:main",
         ],
     },

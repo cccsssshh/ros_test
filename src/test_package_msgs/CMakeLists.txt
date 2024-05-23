@@ -13,10 +13,11 @@ find_package(ament_cmake REQUIRED)
 
 find_package(rosidl_default_generators REQUIRED)
 
+
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/Tcp.srv"
-  "srv/Navgoal.srv"
-  "srv/Navresult.srv"
+  "msg/Navgoal.msg"
+  "msg/Navresult.msg"
   "msg/Navfeedback.msg"
 )
 
