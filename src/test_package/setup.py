@@ -28,6 +28,7 @@ setup(
             "test = test_package.test:main",
             "robot_control = test_package.robot_control:main",
             "amcl_client = test_package.amcl_client:main",
+            "robot_control_tmp = test_package.robot_contorl_tmp:main",
         ],
     },
 )

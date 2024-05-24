@@ -3,13 +3,13 @@ from rclpy.node import Node
 from rclpy.duration import Duration
 from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
 from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
-from test_package_msgs.msg import Navfeedback, Navgoal
+from interface_package.msg import Navfeedback, Navgoal
 from tf_transformations import euler_from_quaternion, quaternion_from_euler
 
 
 class AmclClient(Node):
     def __init__(self):
-        super().__init__("amcl_server")
+        super().__init__("amcl_client")
         
         self.nav = BasicNavigator()
         self.nav.waitUntilNav2Active()
@@ -64,13 +64,6 @@ class AmclClient(Node):
             print('Goal was canceled!')
         elif result == TaskResult.FAILED:
             print('Goal failed!')
-
-
-
-
-
-
-
 
 def main(args=None):
     rp.init(args=args)

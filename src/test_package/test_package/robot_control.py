@@ -1,6 +1,6 @@
 import rclpy as rp
 from rclpy.node import Node
-from test_package_msgs.msg import Navfeedback, Navgoal, Navresult
+from interface_package.msg import Navfeedback, Navgoal
 
 
 class RobotControl(Node):
