@@ -1,0 +1,4 @@
+string uid
+string order_id
+---
+bool success
