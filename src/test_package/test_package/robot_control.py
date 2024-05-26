@@ -5,7 +5,6 @@ class RobotControl(Node):
     def __init__(self):
         super().__init__("robot_control")
 
-
         # self.order_service = self.create_service(Order, 'oreder', self.handle_order)
         self.order_service = self.create_service(RobotCall, 'robot_call', self.handle_order)
         self.order_client_1 = self.create_client(OrderInfo, 'order_info_1')
@@ -25,26 +24,30 @@ class RobotControl(Node):
         self.order_req_1 = OrderInfo.Request()
         self.order_req_2 = OrderInfo.Request()
  
-    
     def handle_order(self, request, response):
+        self.get_loger().inf0("Recieved Robot Call")
+
+        robot_id = request.robot_id
         order_id = request.order_id
         store_id = request.store_id
         kiosk_id = request.kiosk_id
         uid = request.uid
-        robot_id = request.robot_id
+
+        self.get_loger().info(f"robot_id : {robot_id}, order_id : {order_id}, store_id : {store_id}, kiosk_id : {kiosk_id}, uid : {uid}")
 
         if robot_id == 1:
             self.send_order_request_1(uid, order_id)
             #모터 서버한테 스토어아이디, 키오스크 아이디 send
+            response.success = True
+
         elif robot_id == 2:
             self.send_order_request_2(uid, order_id)
-        
-        response.success = True
+            response.success = True
+        else:
+            response.success = False
 
         return response
             
-
-
     def handle_order_tracking_1(self, request, response):
         state = request.state
 
@@ -79,14 +82,15 @@ class RobotControl(Node):
         
         return response
         
-
-    def send_order_request_1(self, uid, order_id):
+    def send_order_request_1(self, uid, order_id): #함수명 변경 필요할 듯
+        self.get_logger().info("send to robot 1")
         self.order_req_1.uid = uid
         self.order_req_1.order_id = order_id
         self.future = self.order_client_1.call_async(self.order_req_1)
         self.future.add_done_callback(self.handle_order_response_1)
 
     def send_order_request_2(self, uid, order_id):
+        self.get_logger().info("send to robot 2")
         self.order_req_2.uid = uid
         self.order_req_2.order_id = order_id
         self.future = self.order_client_2.call_async(self.order_req_2)
@@ -95,17 +99,16 @@ class RobotControl(Node):
     def handle_order_response_1(self, future):
         try:
             response = future.result()
-            self.get_logger().info(f"Received order response: {response.success}")
+            self.get_logger().info(f"Received order response from robot 1 : {response.success}")
         except Exception as e:
-            self.get_logger().info(f"Service call failed: {e}")
-
+            self.get_logger().info(f"Service call failed : {e}")
 
     def handle_order_response_2(self, future):
         try:
             response = future.result()
-            self.get_logger().info(f"Received order response: {response.success}")
+            self.get_logger().info(f"Received order response from robot 2 : {response.success}")
         except Exception as e:
-            self.get_logger().info(f"Service call failed: {e}")
+            self.get_logger().info(f"Service call failed : {e}")
 
 
 def main(args=None):
