@@ -1,3 +1,4 @@
-string state
+string order_id
+string status
 ---
 bool success

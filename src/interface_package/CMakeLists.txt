@@ -14,12 +14,14 @@ find_package(ament_cmake REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
-  "srv/OrderInfo.srv"
-  "srv/OrderTracking.srv"
-  "srv/RobotCall.srv"
   "msg/Navgoal.msg"
   "msg/Navfeedback.msg"
   "msg/Navresult.msg"
+  "srv/RobotCall.srv"
+  "srv/DeliveryBox.srv"
+  "srv/GoalArrival.srv"
+  "srv/OrderInfo.srv"
+  "srv/OrderTracking.srv"
 )
 
 if(BUILD_TESTING)
