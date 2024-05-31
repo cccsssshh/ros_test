@@ -28,9 +28,10 @@ setup(
             "test = test_package.test:main",
             "robot_control = test_package.robot_control:main",
             "robot_control_copy = test_package.robot_control_copy:main",
-            "amcl_client = test_package.amcl_client:main",
+            "nav_test = test_package.nav_test:main",
             "order_tracking_service_client = test_package.order_tracking_service_client:main",
             "order_info_service_server = test_package.order_info_service_server:main",
+            "drobot_motor = test_package.drobot_motor:main"
         ],
     },
 )
