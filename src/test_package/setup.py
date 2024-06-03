@@ -1,4 +1,7 @@
 from setuptools import find_packages, setup
+import os
+from glob import glob
+
 
 package_name = 'test_package'
 
@@ -10,6 +13,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join('share', package_name), glob('launch/*.py')),
+        (os.path.join('share', package_name), glob('params/*.yaml')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -31,7 +36,8 @@ setup(
             "nav_test = test_package.nav_test:main",
             "order_tracking_service_client = test_package.order_tracking_service_client:main",
             "order_info_service_server = test_package.order_info_service_server:main",
-            "drobot_motor = test_package.drobot_motor:main"
+            "drobot_motor = test_package.drobot_motor:main",
+            "amcl_sub = test_package.amcl_sub:main"
         ],
     },
 )
