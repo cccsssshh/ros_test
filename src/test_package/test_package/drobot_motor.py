@@ -85,6 +85,7 @@ class DrobotMotor(Node):
         self.short_goal = self.create_subscription(Float32MultiArray, "/short_goal", self.short_goal_callback, self.qos_profile)
         self.module_client = self.create_client(Module, "module")
         self.cmd_vel_pub = self.create_publisher(Twist, "/base_controller/cmd_vel_unstamped", 10)
+        # self.point_pub = self.create_publisher(Int16, "point", 10)
 
         self.get_logger().info("motor start")
 
@@ -195,20 +196,31 @@ class DrobotMotor(Node):
         result = self.nav.getResult()
         if result == TaskResult.SUCCEEDED:
             print('Goal succeeded!')
-            self.diff_dist = self.calc_diff_pose(goal, self.position)
+
+            self.diff_dist, self.diff_angle, self.goal_yaw = self.calc_diff(goal, self.position)
             if self.diff_dist >= 0.02:
-                return True
+                msg.linear.x = self.diff_x
+                msg.linear.y = self.diff_y
+                self.cmd_vel_pub.publish(msg)
+
             else:
-                self.cmd_vel_pub.publish(self.dist)
+                return True
         elif result == TaskResult.CANCELED:
             print('Goal was canceled!')
+            return False
         elif result == TaskResult.FAILED:
             print('Goal failed!')
+            return Float32MultiArray
+    
+    def angle_command(self, diff_angle, goal_yaw):
+        msg = Twist()
+        msg.
+
+    def go_command(self, diff_x, diff_y):
 
 
 
-
-    def calc_diff_pose(self, goal, current):
+    def calc_diff(self, goal, current):
         goal_x = goal[0]
         goal_y = goal[1]
         goal_yaw = goal[2]
@@ -219,8 +231,16 @@ class DrobotMotor(Node):
         self.diff_y = goal_y - current_y
         diff_dist = math.sqrt((self.diff_x) ** 2 + (self.diff_y) ** 2)
 
+        dx = goal_x - current_x
+        dy = goal_y - current_y
 
-        return diff_dist
+        goal_angle = math.atan2(dy, dx)
+        rotation_angle = goal_angle - current_yaw
+
+        rotation_angle = (rotation_angle + math.pi) % (2 * math.pi) - math.pi
+
+        return diff_dist, rotation_angle, goal_yaw
+    
 
     def is_goal(self, robot_goal, current_position):
         if self.status == RobotStatus.TO_STORE:
