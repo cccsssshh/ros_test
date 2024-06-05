@@ -69,6 +69,8 @@ class DrobotMotor(Node):
         self.nav.waitUntilNav2Active()
 
         self.status = RobotStatus.HOME
+
+        self.current_msg = []
         self.before_msg = []
         self.stores = []
         self.kiosks = []
@@ -76,92 +78,56 @@ class DrobotMotor(Node):
         self.position = None
         self.orientation = None
         #서비스 주고 받아야 함
+        self.current_goal = None
         self.store_goal = None
         self.kiosk_goal = None
+        self.home = []
         self.waypoint = None
         self.diff_dist = 0.0
-        self.is_succeed = False
+        self.moving_status = 0
 
         self.short_goal = self.create_subscription(Float32MultiArray, "/short_goal", self.short_goal_callback, self.qos_profile)
         self.module_client = self.create_client(Module, "module")
         self.cmd_vel_pub = self.create_publisher(Twist, "/base_controller/cmd_vel_unstamped", 10)
-        # self.point_pub = self.create_publisher(Int16, "point", 10)
+
 
         self.get_logger().info("motor start")
 
-        # self.declare_parameters(
-        #     namespace="",
-        #     parameters=[
-        #         ("robot_coordinates.robot1", [0.0, 2.5, 0.0]),
-        #         ("robot_coordinates.robot2", [0.0, 1.6, 0.0]),
-        #         ("robot_coordinates.robot3", [0.0, 0.6, 0.0]),
-        #         ("store_coordinates.store11", [1.4, 2.6, 0.0]),
-        #         ("store_coordinates.store12", [1.4, 1.7, 0.0]),
-        #         ("store_coordinates.store21", [1.4, 1.2, 0.0]),
-        #         ("store_coordinates.store22", [1.4, 0.4, 0.0]),
-        #         ("kiosk_coordinates.kiosk11", [0.3, 2.8, 80.0]),
-        #         ("kiosk_coordinates.kiosk12", [1.0, 2.8, 80.0]),
-        #         ("kiosk_coordinates.kiosk21", [1.0, 0.1, -80.0]),
-        #         ("kiosk_coordinates.kiosk22", [0.3, 0.1, -80.0]),
-        #         ("waypoints.way1", [0.3, 2.6, 0.0]),
-        #         ("waypoints.way2", [0.3, 1.5, -80.0]),
-        #         ("waypoints.way3", [0.3, 0.3, -80.0]),
-        #         ("waypoints.way4", [1.15, 0.3, 160.0]),
-        #         ("waypoints.way5", [1.15, 1.5, 160.0]),
-        #         ("waypoints.way6", [1.15, 2.5, 80.0]),
-        #     ]
-        # )
-
-        # self.robot1 = self.get_parameter("robot_coordinates.robot1").value
-        # self.robot2 = self.get_parameter("robot_coordinates.robot2").value
-        # self.robot3 = self.get_parameter("robot_coordinates.robot3").value
-        
-        # self.store11 = self.get_parameter("store_coordinates.store11").value
-        # self.store12 = self.get_parameter("store_coordinates.store12").value
-        # self.store21 = self.get_parameter("store_coordinates.store21").value
-        # self.store22 = self.get_parameter("store_coordinates.store22").value
-
-        # self.kiosk11 = self.get_parameter("kiosk_coordinates.kiosk11").value
-        # self.kiosk12 = self.get_parameter("kiosk_coordinates.kiosk12").value
-        # self.kiosk21 = self.get_parameter("kiosk_coordinates.kiosk21").value
-        # self.kiosk22 = self.get_parameter("kiosk_coordinates.kiosk22").value
-
-        # self.way1 = self.get_parameter("waypoints.way1").value
-        # self.way2 = self.get_parameter("waypoints.way2").value
-        # self.way3 = self.get_parameter("waypoints.way3").value
-        # self.way4 = self.get_parameter("waypoints.way4").value
-        # self.way5 = self.get_parameter("waypoints.way5").value
-        # self.way6 = self.get_parameter("waypoints.way6").value
 
     def short_goal_callback(self, msg):
-        current_msg = msg.data
+        self.current_msg = msg.data
 
-        if self.before_msg != current_msg:
+        if self.before_msg != self.current_msg:
+            self.moving_status = 1
+
             if self.status == RobotStatus.HOME:
+                self.current_goal = self.store_goal
                 self.status = RobotStatus.TO_STORE
                 self.request_module("ST")
-                self.send_goal(current_msg)
-                self.is_goal()
+                self.send_goal(self.current_msg)
+                self.check_goal()
             elif self.status == RobotStatus.TO_STORE:
-                self.send_goal(current_msg)
-                self.is_goal()
+                self.send_goal(self.current_msg)
+                self.check_goal()
             elif self.status == RobotStatus.AT_STORE:
+                self.current_goal = self.kiosk_goal
                 self.status = RobotStatus.TO_KIOSK
                 self.request_module("KS")
-                self.send_goal(current_msg)
-                self.is_goal()
+                self.send_goal(self.current_msg)
+                self.check_goal()
             elif self.status == RobotStatus.AT_KIOSK:
-                self.send_goal(current_msg)
-                self.is_goal()
+                self.send_goal(self.current_msg)
+                self.check_goal()
             elif self.status == RobotStatus.AT_KIOSK:
+                self.current_goal = self.home
                 self.status = RobotStatus.RETURNING
-                self.send_goal(current_msg)
-                self.is_goal()
+                self.send_goal(self.current_msg)
+                self.check_goal()
             elif self.status == RobotStatus.RETURNING:
-                self.send_goal(current_msg)
-                self.is_goal()
+                self.send_goal(self.current_msg)
+                self.check_goal()
 
-        self.before_msg = current_msg
+        self.before_msg = self.current_msg
         
     def goalPose(self, p_x, p_y, degree):
         tmp = [0, 0, degree]
@@ -194,29 +160,28 @@ class DrobotMotor(Node):
                 if Duration.from_msg(feedback.navigation_time) > Duration(seconds=30.0):
                     self.nav.cancelTask()
         result = self.nav.getResult()
+
         if result == TaskResult.SUCCEEDED:
             print('Goal succeeded!')
-
-            self.diff_dist, self.diff_angle, self.goal_yaw = self.calc_diff(goal, self.position)
-            if self.diff_dist >= 0.02:
-                msg.linear.x = self.diff_x
-                msg.linear.y = self.diff_y
-                self.cmd_vel_pub.publish(msg)
-
-            else:
-                return True
+            self.check_point(self.position)
         elif result == TaskResult.CANCELED:
             print('Goal was canceled!')
-            return False
         elif result == TaskResult.FAILED:
             print('Goal failed!')
-            return Float32MultiArray
+
     
+    def check_point(self, position):
+        diff_dist, _, _ = self.calc_diff(position, self.current_goal, position)
+        if diff_dist <= 0.02:
+            return True
+        else:
+            self.send_goal(self.current_msg)
+
     def angle_command(self, diff_angle, goal_yaw):
         msg = Twist()
-        msg.
 
-    def go_command(self, diff_x, diff_y):
+
+    # def go_command(self, diff_x, diff_y):
 
 
 
@@ -242,7 +207,7 @@ class DrobotMotor(Node):
         return diff_dist, rotation_angle, goal_yaw
     
 
-    def is_goal(self, robot_goal, current_position):
+    def check_goal(self, robot_goal, current_position):
         if self.status == RobotStatus.TO_STORE:
             #robot이 도착
             self.status == RobotStatus.AT_STORE

@@ -21,8 +21,10 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/DeliveryBox.srv"
   "srv/GoalArrival.srv"
   "srv/OrderInfo.srv"
+  "srv/LocationInfo.srv"
   "srv/OrderTracking.srv"
   "srv/Module.srv"
+  "srv/NodeNum.srv"
 )
 
 if(BUILD_TESTING)

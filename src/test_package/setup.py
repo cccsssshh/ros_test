@@ -37,7 +37,11 @@ setup(
             "order_tracking_service_client = test_package.order_tracking_service_client:main",
             "order_info_service_server = test_package.order_info_service_server:main",
             "drobot_motor = test_package.drobot_motor:main",
-            "amcl_sub = test_package.amcl_sub:main"
+            "amcl_sub = test_package.amcl_sub:main",
+            "drobot_motor_1 = test_package.drobot_motor_1:main",
+            "drobot_motor_2 = test_package.drobot_motor_2:main",
+            "drobot_motor_3 = test_package.drobot_motor_3:main",
+
         ],
     },
 )
