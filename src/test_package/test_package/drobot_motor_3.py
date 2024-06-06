@@ -18,7 +18,6 @@ from tf_transformations import quaternion_from_euler, euler_from_quaternion
 
 import math
 from time import sleep
-# import pathDict
 
 # ROBOT_NUMBER = "1"
 # ROBOT_NUMBER = "2"
@@ -112,7 +111,6 @@ class DrobotMotor(Node):
 
         self.declare_parameters(namespace="", parameters=parameters)
 
-        # Get parameters
         self.robot_positions = [(name, self.get_parameter(name).value) for name in ["robot1", "robot2", "robot3"]]
         self.store_positions = [(name, self.get_parameter(name).value) for name in ["store11", "store12", "store21", "store22"]]
         self.kiosk_positions = [(name, self.get_parameter(name).value) for name in ["kiosk11", "kiosk12", "kiosk21", "kiosk22"]]
@@ -168,38 +166,11 @@ class DrobotMotor(Node):
         except Exception as e:
             self.get_logger().error(f"arrival call failed : {e}")
 
-
-    # def short_goal_callback(self, request, response):
-    #     #잘못된 명령이 왔을 때 response false 보내면서 에러 보내야 한다.
-    #     self.next_point =int(request.nodenum) # 0 ~ 38
-    #     self.get_logger().info(f"next_position : {self.next_postitions[0]}, {self.next_postitions[1]}, status : {self.status.value}")        
-
-    #     if self.status in [RobotStatus.HOME, RobotStatus.AT_STORE, RobotStatus.AT_KIOSK]:
-    #         if 0 <= self.next_point <= 27:
-    #             self.update_status()
-    #         else:
-    #             response.success =  False
-    #     elif self.status in [RobotStatus.AT_HOME, RobotStatus. RETURNING]:
-    #         if self.is_active:
-    #             self.status = RobotStatus.TO_STORE
-            
-    #     elif self.status in [RobotStatus.TO_STORE, RobotStatus.TO_KIOSK]:
-    #         pass
-    #     # self.send_goal(self.next_postitions[1])
-    #     self.verify_checkpoint()
-    #     self.request_robot_arrival(str(self.next_point)) ### temp code
-
-    #     # self.check_succeed(self.position)
-    #     response.success = True
-        
-    #     return response
-
     def short_goal_callback(self, request, response):
         #waypoints : 0 ~ 27
         #robot_positions : 28 ~30
         #store_points : 31 ~ 34
         #kiosk_points : 35 ~ 38
-        #잘못된 명령이 왔을 때 response false 보내면서 에러 보내야 한다.
         self.next_point =int(request.nodenum) # 0 ~ 38
 
         if 0 <= self.next_point <= 38:
@@ -294,6 +265,7 @@ class DrobotMotor(Node):
 
         return goal_pose
 
+    # 여기서 에러 상황 로직이 필요
     def send_goal(self, goal):
         x = goal[0]
         y = goal[1]
