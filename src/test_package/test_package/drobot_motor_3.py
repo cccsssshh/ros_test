@@ -20,7 +20,7 @@ from tf_transformations import quaternion_from_euler, euler_from_quaternion
 import math
 from time import sleep
 
-import pathDict
+# import pathDict
 
 
 # ROBOT_NUMBER = "1"
@@ -72,24 +72,27 @@ class DrobotMotor(Node):
         self.nav = BasicNavigator()
         # self.nav.waitUntilNav2Active()
 
-        self.path_dict_map = {
-            range(0, 28): pathDict.wayList,
-            range(28, 31): pathDict.robotXY_Dict,
-            range(31, 35): pathDict.storeXY_Dict,
-            range(35, 39): pathDict.kioskXY_Dict
-        }
-
         self.status = RobotStatus.HOME
 
-        self.current_goal = []
+
         self.position = None
         self.orientation = None
         
+        self.short_goal = []
         self.store_goal = ""
         self.kiosk_goal = ""
 
         self.diff_dist = 0.0
-        self.moving_status = 0
+
+        self.status_change = {
+            RobotStatus.HOME: RobotStatus.TO_STORE,
+            RobotStatus.TO_STORE: RobotStatus.AT_STORE,
+            RobotStatus.AT_STORE: RobotStatus.TO_KIOSK,
+            RobotStatus.TO_KIOSK: RobotStatus.AT_KIOSK,
+            RobotStatus.AT_KIOSK: RobotStatus.RETURNING,
+            RobotStatus.RETURNING: RobotStatus.AT_HOME,
+            # RobotStatus.AT_HOME: RobotStatus.HOME
+        }
 
         self.is_active = False
 
@@ -104,32 +107,19 @@ class DrobotMotor(Node):
         self.get_logger().info(f"{ROBOT_NUMBER} motor start")
 
     def update_status(self):
-        self.get_logger().info(f"Updating status from {self.status.value}")
-        if self.status == RobotStatus.HOME:
-            self.status = RobotStatus.TO_STORE
-            self.get_logger().info(f"Status updated to TO_STORE: {self.status.value}")
-        elif self.status == RobotStatus.TO_STORE:
-            self.status = RobotStatus.AT_STORE
-            self.get_logger().info(f"Status updated to AT_STORE: {self.status.value}")
-        elif self.status == RobotStatus.AT_STORE:
-            self.status = RobotStatus.TO_KIOSK
-            self.get_logger().info(f"Status updated to TO_KIOSK: {self.status.value}")
-        elif self.status == RobotStatus.TO_KIOSK:
-            self.status = RobotStatus.AT_KIOSK
-            self.get_logger().info(f"Status updated to AT_KIOSK: {self.status.value}")
-        elif self.status == RobotStatus.AT_KIOSK:
-            self.status = RobotStatus.RETURNING
+        self.get_logger().info(f"Updating status from {self.status.name}")
+        
+        self.status = self.status_change[self.status]
+        self.get_logger().info(f"Status updated to {self.status.name}")
+
+        if self.status == RobotStatus.RETURNING:
             self.returning()
-            self.get_logger().info(f"Status updated to RETURNING: {self.status.value}")
-        elif self.status == RobotStatus.RETURNING:
-            self.status = RobotStatus.AT_HOME
-            self.get_logger().info(f"Status updated to AT_HOME: {self.status.value}")
+            self.get_logger().info("Returning to Home")    
+        
+        if self.status == RobotStatus.AT_HOME:
             sleep(1)
             self.status = RobotStatus.HOME
-            self.get_logger().info(f"Status updated to AT_HOME: {self.status.value}")
-        elif self.status == RobotStatus.AT_HOME:
-            self.status = RobotStatus.HOME
-            self.get_logger().info(f"Status updated to HOME: {self.status.value}")
+            self.get_logger().info(f"Status updated to {self.status.name}")
 
     def request_robot_arrival(self, short_goal):
         robot_arrival_request = NodeNum.Request()
@@ -149,14 +139,10 @@ class DrobotMotor(Node):
         short_goal =request.nodenum
         self.get_logger().info(f"short_goal : {short_goal}")
 
-        for key_range, target_dict in self.path_dict_map.items():
-            if short_goal in key_range:
-                if target_dict is pathDict.wayList:
-                    self.current_goal = target_dict[short_goal]
-                else:
-                    self.current_goal = target_dict[pathDict.endPoint_Dict_2[short_goal]]
-                break
-        self.get_logger().info(f"current goal: {self.current_goal}, status : {self.status.value}")
+        ####파싱하는 부분
+
+
+        self.get_logger().info(f"short goal: {self.short_goal}, status : {self.status.value}")
 
         if self.status in [RobotStatus.HOME, RobotStatus.AT_STORE, RobotStatus.AT_KIOSK]:
             self.update_status()
@@ -301,7 +287,6 @@ class DrobotMotor(Node):
         self.store_goal = ""
         self.kiosk_goal = ""
         self.diff_dist = 0.0
-        self.moving_status = 0
 
         self.is_active = False
     
