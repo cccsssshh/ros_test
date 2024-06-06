@@ -1,7 +1,6 @@
 import sys
 import os
 
-# 현재 디렉토리를 PYTHONPATH에 추가
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from enum import Enum
@@ -68,8 +67,8 @@ class DrobotMotor(Node):
             # RobotStatus.AT_HOME: RobotStatus.HOME
         }
 
-        self.current_point = []
-        self.next_point = []
+        self.current_point = 0
+        self.next_point = 0
         self.store_point = []
         self.kiosk_point = []
 
@@ -88,6 +87,10 @@ class DrobotMotor(Node):
         self.get_logger().info(f"R-{ROBOT_NUMBER} motor start")
     
     def set_parameters(self):
+        #waypoints : 0 ~ 27
+        #robot_points : 28 ~30
+        #store_points : 31 ~ 34
+        #kiosk_points : 35 ~ 38
         parameters = [
             ('robot1', [-0.1, 2.5, 0.0]),
             ('robot2', [-0.1, 1.5, 0.0]),
@@ -100,33 +103,30 @@ class DrobotMotor(Node):
             ('kiosk12', [1.15, 2.8, 80.0]),
             ('kiosk21', [1.15, 0.5, -80.0]),
             ('kiosk22', [0.3, 0.5, -80.0]),
-                ]
+        ]
         for i in range(1, 8):
             for j in range(1, 5):
-                parameters.append((f'way{i}{j}', [0.0, 0.0, 0.0]))  # Placeholder values
+                parameters.append((f'way{i}{j}', [0.0, 0.0, 0.0]))
 
         self.declare_parameters(namespace='', parameters=parameters)
 
         # Get parameters
-        self.robot_coords = [self.get_parameter(name).value for name in ['robot1', 'robot2', 'robot3']]
-        self.store_coords = [self.get_parameter(name).value for name in ['store11', 'store12', 'store21', 'store22']]
-        self.kiosk_coords = [self.get_parameter(name).value for name in ['kiosk11', 'kiosk12', 'kiosk21', 'kiosk22']]
+        self.robot_points = [(name, self.get_parameter(name).value) for name in ['robot1', 'robot2', 'robot3']]
+        self.store_points = [(name, self.get_parameter(name).value) for name in ['store11', 'store12', 'store21', 'store22']]
+        self.kiosk_points = [(name, self.get_parameter(name).value) for name in ['kiosk11', 'kiosk12', 'kiosk21', 'kiosk22']]
         
         self.waypoints = [
-            self.get_parameter(f'way{i}{j}').value 
+            (f'way{i}{j}', self.get_parameter(f'way{i}{j}').value) 
             for i in range(1, 8) 
             for j in range(1, 5)
         ]
 
-        # Combine all positions into a single list for further processing
-        wayList = self.waypoints
-        checkpoints = self.robot_coords + self.store_coords + self.kiosk_coords
-        all_positions = wayList + checkpoints
-        self.print_all_positions(all_positions)
+        self.all_points = self.waypoints + self.robot_points + self.store_points + self.kiosk_points
+        # self.print_all_points(self.all_points)
 
-    def print_all_positions(self, positions):
-        for i, pos in enumerate(positions):
-            self.get_logger().info(f"Position {i}: x = {pos[0]}, y = {pos[1]}, theta = {pos[2]}")
+    # def print_all_points(self, points):
+    #     for name, pos in points:
+    #         self.get_logger().info(f"Parameter {name}: x = {pos[0]}, y = {pos[1]}, theta = {pos[2]}")
 
     def update_status(self):
         self.get_logger().info(f"Updating status from {self.status.name}")
@@ -158,13 +158,9 @@ class DrobotMotor(Node):
 
 
     def short_goal_callback(self, request, response):
-        next_point =request.nodenum
-        self.get_logger().info(f"next_point : {next_point}")
-
-        ####파싱하는 부분
-
-
-        self.get_logger().info(f"short goal: {self.next_point}, status : {self.status.value}")
+        #잘못된 명령이 왔을 때 response false 보내면서 에러 보내야 한다.
+        self.next_point =int(request.nodenum) # 0 ~ 38
+        self.get_logger().info(f"next_point : {self.all_points[self.next_point]}, status : {self.status.value}")        
 
         if self.status in [RobotStatus.HOME, RobotStatus.AT_STORE, RobotStatus.AT_KIOSK]:
             self.update_status()
@@ -173,9 +169,9 @@ class DrobotMotor(Node):
                 self.status = RobotStatus.TO_STORE
         elif self.status in [RobotStatus.TO_STORE, RobotStatus.TO_KIOSK]:
             pass
-        # self.send_goal(next_point)
+        # self.send_goal(self.next_point)
         self.is_checkpoint()
-        self.request_robot_arrival(next_point) ### temp code
+        self.request_robot_arrival(str(self.next_point)) ### temp code
 
         # self.check_succeed(self.position)
         response.success = True
@@ -195,19 +191,20 @@ class DrobotMotor(Node):
 
 
     def is_checkpoint(self):
-        self.get_logger().info("check goal")
-        if self.current_msg >= 31 and self.current_msg <= 34 and self.status == RobotStatus.TO_STORE:
+        # self.get_logger().info("check point")
+        if self.next_point >= 31 and self.next_point <= 34 and self.status == RobotStatus.TO_STORE:
             self.update_status()
             self.request_module("ST")
-            self.get_logger().info(f"Status updated to {self.status.value} on goal check")
-        elif self.current_msg >= 35 and self.current_msg <= 38 and self.status == RobotStatus.TO_KIOSK:
+            self.get_logger().info(f"R-{ROBOT_NUMBER} arrived at Store. So, status updated to {self.status.value}")
+        elif self.next_point >= 35 and self.next_point <= 38 and self.status == RobotStatus.TO_KIOSK:
             self.update_status()
             self.request_module("KS")
-            self.get_logger().info(f"Status updated to {self.status.value} on goal check")
-        elif self.current_msg >= 28 and self.current_msg <= 30 and self.status == RobotStatus.RETURNING:
+            self.get_logger().info(f"R-{ROBOT_NUMBER} arrived at Kiosk. So, status updated to {self.status.value}")
+        elif self.next_point >= 28 and self.next_point <= 30 and self.status == RobotStatus.RETURNING:
             self.update_status()
-            self.get_logger().info(f"Status updated to {self.status.value} on goal check")
-
+            self.get_logger().info(f"R-{ROBOT_NUMBER} arrived at Home. So, status updated to {self.status.value}")
+        else:
+            self.get_logger().info("On waypoints")
 
     def goalPose(self, p_x, p_y, degree):
         tmp = [0, 0, degree]
@@ -303,7 +300,7 @@ class DrobotMotor(Node):
         self.get_logger().info("Robot reset")
         self.status = RobotStatus.HOME
 
-        self.current_msg = None
+        self.next_point = None
         self.before_msg = None
         self.current_goal = []
         self.position = None
@@ -332,13 +329,15 @@ class DrobotStatus(Node):
 
         self.motor_order_service = self.create_service(LocationInfo, 'location_info', self.motor_order_callback)
 
-        self.timer_period = 1.0
+        self.timer_period = 10.0
         self.timer = self.create_timer(self.timer_period, self.timer_callback)
         self.status_pub = self.create_publisher(Int16, "/status", self.qos_profile)
 
     def motor_order_callback(self, request, response):
         store_id = request.store_id
         kiosk_id = request.kiosk_id
+
+        self.get_logger().info("Get motor order request")
 
         self.motor_node.store_id = store_id
         self.motor_node.kiosk_id = kiosk_id
@@ -351,7 +350,7 @@ class DrobotStatus(Node):
         msg = Int16()
         msg.data = status.value
         self.status_pub.publish(msg)
-        # self.get_logger().info(f"Published status: {msg.data}")
+        self.get_logger().info(f"Published status: {msg.data}")
 
     def timer_callback(self):
         self.status_publish(self.motor_node.status)
