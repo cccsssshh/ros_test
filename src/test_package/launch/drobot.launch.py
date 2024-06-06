@@ -12,7 +12,7 @@ def generate_launch_description():
             Node(
                 namespace= '',
                 package= 'test_package',
-                executable= 'drobot_motor',
+                executable= 'drobot_motor_3',
                 output= 'screen',
                 parameters=[params_file]
             )

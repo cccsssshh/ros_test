@@ -38,14 +38,10 @@ setup(
             "order_info_service_server = test_package.order_info_service_server:main",
             "drobot_motor = test_package.drobot_motor:main",
             "amcl_sub = test_package.amcl_sub:main",
-<<<<<<< HEAD
-            "taskManager = test_package.taskManager:main"
-=======
             "drobot_motor_1 = test_package.drobot_motor_1:main",
             "drobot_motor_2 = test_package.drobot_motor_2:main",
             "drobot_motor_3 = test_package.drobot_motor_3:main",
 
->>>>>>> 9895f2ed502e335c3257e60c7df14cba1ea51b4a
         ],
     },
 )

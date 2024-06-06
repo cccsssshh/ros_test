@@ -19,9 +19,7 @@ from tf_transformations import quaternion_from_euler, euler_from_quaternion
 
 import math
 from time import sleep
-
 # import pathDict
-
 
 # ROBOT_NUMBER = "1"
 # ROBOT_NU MBER = "2"
@@ -42,23 +40,6 @@ class OrderStatus(Enum):
     DELIVERY_START = "DS"
     DELIVERY_FINISH = "DF"
 
-class AmclSub(Node):
-    def __init__(self, motor_node):
-        super().__init__("amcl_sub_node")
-        self.motor_node = motor_node
-        self.amcl_sub = self.create_subscription(PoseWithCovarianceStamped, "/amcl_pose", self.listener_callback, 10)
-
-    def listener_callback(self, msg):
-        position = msg.pose.pose.position
-        orientation = msg.pose.pose.orientation
-
-        quaternion = (orientation.x, orientation.y, orientation.z, orientation.w)
-        euler = euler_from_quaternion(quaternion)
-        roll, pitch, yaw = euler
-
-        self.get_logger().info(f'Received pose: position=({position.x}, {position.y}, {position.z}), orientation=(roll={roll}, pitch={pitch}, yaw={yaw})')
-        self.motor_node.position = position
-        self.motor_node.orientation = orientation
 
 class DrobotMotor(Node):
     def __init__(self):
@@ -72,18 +53,11 @@ class DrobotMotor(Node):
         self.nav = BasicNavigator()
         # self.nav.waitUntilNav2Active()
 
+        self.is_active = False
         self.status = RobotStatus.HOME
-
-
-        self.position = None
-        self.orientation = None
         
-        self.short_goal = []
-        self.store_goal = ""
-        self.kiosk_goal = ""
-
-        self.diff_dist = 0.0
-
+        self.set_parameters()
+        
         self.status_change = {
             RobotStatus.HOME: RobotStatus.TO_STORE,
             RobotStatus.TO_STORE: RobotStatus.AT_STORE,
@@ -94,7 +68,14 @@ class DrobotMotor(Node):
             # RobotStatus.AT_HOME: RobotStatus.HOME
         }
 
-        self.is_active = False
+        self.current_point = []
+        self.next_point = []
+        self.store_point = []
+        self.kiosk_point = []
+
+        self.position = None
+        self.orientation = None
+        self.diff_dist = 0.0
 
         self.short_goal_server = self.create_service(NodeNum, "shortGoal", self.short_goal_callback)
         self.robot_arrival_client = self.create_client(NodeNum, 'robotArrival')
@@ -104,7 +85,121 @@ class DrobotMotor(Node):
         self.cmd_vel_pub = self.create_publisher(Twist, "/base_controller/cmd_vel_unstamped", 10)
         self.reset_sub = self.create_service(Trigger, '/reset', self.reset_callback)
         
-        self.get_logger().info(f"{ROBOT_NUMBER} motor start")
+        self.get_logger().info(f"R-{ROBOT_NUMBER} motor start")
+    
+    def set_parameters(self):
+        self.declare_parameters(
+            namespace='',
+            parameters=[
+                ('robot1', [-0.1, 2.5, 0.0]),
+                ('robot2', [-0.1, 1.5, 0.0]),
+                ('robot3', [-0.1, 0.3, 0.0]),
+                ('store11', [1.7, 2.8, 160.0]),
+                ('store12', [1.7, 1.7, 160.0]),
+                ('store21', [1.7, 1.3, 160.0]),
+                ('store22', [1.7, 0.3, 160.0]),
+                ('kiosk11', [0.3, 3.2, 80.0]),
+                ('kiosk12', [1.15, 2.8, 80.0]),
+                ('kiosk21', [1.15, 0.5, -80.0]),
+                ('kiosk22', [0.3, 0.5, -80.0]),
+                ('way11', [0.5, 2.6, 0.0]),
+                ('way12', [0.5, 2.6, 80.0]),
+                ('way13', [0.5, 2.6, -80.0]),
+                ('way14', [0.5, 2.6, 160.0]),
+                ('way21', [0.5, 1.5, 0.0]),
+                ('way22', [0.5, 1.5, 80.0]),
+                ('way23', [0.5, 1.5, -80.0]),
+                ('way24', [0.5, 1.5, 160.0]),
+                ('way31', [0.5, 0.3, 0.0]),
+                ('way32', [0.5, 0.3, 80.0]),
+                ('way33', [0.5, 0.3, -80.0]),
+                ('way34', [0.5, 0.3, 160.0]),
+                ('way41', [1.15, 0.3, 0.0]),
+                ('way42', [1.15, 0.3, 80.0]),
+                ('way43', [1.15, 0.3, -80.0]),
+                ('way44', [1.15, 0.3, 160.0]),
+                ('way51', [1.15, 1.3, 0.0]),
+                ('way52', [1.15, 1.3, 80.0]),
+                ('way53', [1.15, 1.3, -80.0]),
+                ('way54', [1.15, 1.3, 160.0]),
+                ('way61', [1.15, 1.8, 0.0]),
+                ('way62', [1.15, 1.8, 80.0]),
+                ('way63', [1.15, 1.8, -80.0]),
+                ('way64', [1.15, 1.8, 160.0]),
+                ('way71', [1.15, 2.5, 0.0]),
+                ('way72', [1.15, 2.5, 80.0]),
+                ('way73', [1.15, 2.5, -80.0]),
+                ('way74', [1.15, 2.5, 160.0]),
+            ]
+        )
+
+        # Get parameters
+        self.robot1 = self.get_parameter('robot1').value
+        self.robot2 = self.get_parameter('robot2').value
+        self.robot3 = self.get_parameter('robot3').value
+
+        self.store11 = self.get_parameter('store11').value
+        self.store12 = self.get_parameter('store12').value
+        self.store21 = self.get_parameter('store21').value
+        self.store22 = self.get_parameter('store22').value
+
+        self.kiosk11 = self.get_parameter('kiosk11').value
+        self.kiosk12 = self.get_parameter('kiosk12').value
+        self.kiosk21 = self.get_parameter('kiosk21').value
+        self.kiosk22 = self.get_parameter('kiosk22').value
+
+        self.way11 = self.get_parameter('way11').value
+        self.way12 = self.get_parameter('way12').value
+        self.way13 = self.get_parameter('way13').value
+        self.way14 = self.get_parameter('way14').value
+        self.way21 = self.get_parameter('way21').value
+        self.way22 = self.get_parameter('way22').value
+        self.way23 = self.get_parameter('way23').value
+        self.way24 = self.get_parameter('way24').value
+        self.way31 = self.get_parameter('way31').value
+        self.way32 = self.get_parameter('way32').value
+        self.way33 = self.get_parameter('way33').value
+        self.way34 = self.get_parameter('way34').value
+        self.way41 = self.get_parameter('way41').value
+        self.way42 = self.get_parameter('way42').value
+        self.way43 = self.get_parameter('way43').value
+        self.way44 = self.get_parameter('way44').value
+        self.way51 = self.get_parameter('way51').value
+        self.way52 = self.get_parameter('way52').value
+        self.way53 = self.get_parameter('way53').value
+        self.way54 = self.get_parameter('way54').value
+        self.way61 = self.get_parameter('way61').value
+        self.way62 = self.get_parameter('way62').value
+        self.way63 = self.get_parameter('way63').value
+        self.way64 = self.get_parameter('way64').value
+        self.way71 = self.get_parameter('way71').value
+        self.way72 = self.get_parameter('way72').value
+        self.way73 = self.get_parameter('way73').value
+        self.way74 = self.get_parameter('way74').value
+
+        # Combine all positions into a single list for further processing
+        wayList = [
+            self.way11, self.way12, self.way13, self.way14,
+            self.way21, self.way22, self.way23, self.way24,
+            self.way31, self.way32, self.way33, self.way34,
+            self.way41, self.way42, self.way43, self.way44,
+            self.way51, self.way52, self.way53, self.way54,
+            self.way61, self.way62, self.way63, self.way64,
+            self.way71, self.way72, self.way73, self.way74,
+        ]
+
+        checkpoints = [
+            self.robot1, self.robot2, self.robot3,
+            self.store11, self.store12, self.store21, self.store22,
+            self.kiosk11, self.kiosk12, self.kiosk21, self.kiosk22
+        ]
+
+        all_positions = wayList + checkpoints
+        self.print_all_positions(all_positions)
+
+    def print_all_positions(self, positions):
+        for i, pos in enumerate(positions):
+            self.get_logger().info(f"Position {i}: x = {pos[0]}, y = {pos[1]}, theta = {pos[2]}")
 
     def update_status(self):
         self.get_logger().info(f"Updating status from {self.status.name}")
@@ -121,9 +216,9 @@ class DrobotMotor(Node):
             self.status = RobotStatus.HOME
             self.get_logger().info(f"Status updated to {self.status.name}")
 
-    def request_robot_arrival(self, short_goal):
+    def request_robot_arrival(self, next_point):
         robot_arrival_request = NodeNum.Request()
-        robot_arrival_request.nodenum = short_goal
+        robot_arrival_request.nodenum = next_point
         future = self.robot_arrival_client.call_async(robot_arrival_request)
         future.add_done_callback(self.response_robot_arrival)
 
@@ -136,22 +231,24 @@ class DrobotMotor(Node):
 
 
     def short_goal_callback(self, request, response):
-        short_goal =request.nodenum
-        self.get_logger().info(f"short_goal : {short_goal}")
+        next_point =request.nodenum
+        self.get_logger().info(f"next_point : {next_point}")
 
         ####파싱하는 부분
 
 
-        self.get_logger().info(f"short goal: {self.short_goal}, status : {self.status.value}")
+        self.get_logger().info(f"short goal: {self.next_point}, status : {self.status.value}")
 
         if self.status in [RobotStatus.HOME, RobotStatus.AT_STORE, RobotStatus.AT_KIOSK]:
             self.update_status()
         elif self.status in [RobotStatus.AT_HOME, RobotStatus. RETURNING]:
             if self.is_active:
                 self.status = RobotStatus.TO_STORE
-        # self.send_goal(short_goal)
-        self.check_is_goal()
-        self.request_robot_arrival(short_goal) ### temp code
+        elif self.status in [RobotStatus.TO_STORE, RobotStatus.TO_KIOSK]:
+            pass
+        # self.send_goal(next_point)
+        self.is_checkpoint()
+        self.request_robot_arrival(next_point) ### temp code
 
         # self.check_succeed(self.position)
         response.success = True
@@ -164,13 +261,13 @@ class DrobotMotor(Node):
         if diff_dist <= 0.02:
             self.get_logger().info("moving is succeed!")
             # self.request_robot_arrival("1")
-            self.check_is_goal()
+            self.is_checkpoint()
         else:
             self.send_goal(self.current_goal)
             self.get_logger().debug("moving is failed!")
 
 
-    def check_is_goal(self):
+    def is_checkpoint(self):
         self.get_logger().info("check goal")
         if self.current_msg >= 31 and self.current_msg <= 34 and self.status == RobotStatus.TO_STORE:
             self.update_status()
@@ -284,16 +381,16 @@ class DrobotMotor(Node):
         self.current_goal = []
         self.position = None
         self.orientation = None
-        self.store_goal = ""
-        self.kiosk_goal = ""
+        self.store_point = []
+        self.kiosk_point = []
         self.diff_dist = 0.0
 
         self.is_active = False
     
     def returning(self):
         self.get_logger().info("Robot returning")
-        self.store_goal = ""
-        self.kiosk_goal = ""
+        self.store_point = []
+        self.kiosk_point = []
         self.is_active = False
 
 class DrobotStatus(Node):
@@ -332,6 +429,23 @@ class DrobotStatus(Node):
     def timer_callback(self):
         self.status_publish(self.motor_node.status)
 
+class AmclSub(Node):
+    def __init__(self, motor_node):
+        super().__init__("amcl_sub_node")
+        self.motor_node = motor_node
+        self.amcl_sub = self.create_subscription(PoseWithCovarianceStamped, "/amcl_pose", self.listener_callback, 10)
+
+    def listener_callback(self, msg):
+        position = msg.pose.pose.position
+        orientation = msg.pose.pose.orientation
+
+        quaternion = (orientation.x, orientation.y, orientation.z, orientation.w)
+        euler = euler_from_quaternion(quaternion)
+        roll, pitch, yaw = euler
+
+        self.get_logger().info(f'Received pose: position=({position.x}, {position.y}, {position.z}), orientation=(roll={roll}, pitch={pitch}, yaw={yaw})')
+        self.motor_node.position = position
+        self.motor_node.orientation = orientation
 
 def main(args=None):
     rp.init(args=args)
