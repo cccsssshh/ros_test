@@ -88,112 +88,39 @@ class DrobotMotor(Node):
         self.get_logger().info(f"R-{ROBOT_NUMBER} motor start")
     
     def set_parameters(self):
-        self.declare_parameters(
-            namespace='',
-            parameters=[
-                ('robot1', [-0.1, 2.5, 0.0]),
-                ('robot2', [-0.1, 1.5, 0.0]),
-                ('robot3', [-0.1, 0.3, 0.0]),
-                ('store11', [1.7, 2.8, 160.0]),
-                ('store12', [1.7, 1.7, 160.0]),
-                ('store21', [1.7, 1.3, 160.0]),
-                ('store22', [1.7, 0.3, 160.0]),
-                ('kiosk11', [0.3, 3.2, 80.0]),
-                ('kiosk12', [1.15, 2.8, 80.0]),
-                ('kiosk21', [1.15, 0.5, -80.0]),
-                ('kiosk22', [0.3, 0.5, -80.0]),
-                ('way11', [0.5, 2.6, 0.0]),
-                ('way12', [0.5, 2.6, 80.0]),
-                ('way13', [0.5, 2.6, -80.0]),
-                ('way14', [0.5, 2.6, 160.0]),
-                ('way21', [0.5, 1.5, 0.0]),
-                ('way22', [0.5, 1.5, 80.0]),
-                ('way23', [0.5, 1.5, -80.0]),
-                ('way24', [0.5, 1.5, 160.0]),
-                ('way31', [0.5, 0.3, 0.0]),
-                ('way32', [0.5, 0.3, 80.0]),
-                ('way33', [0.5, 0.3, -80.0]),
-                ('way34', [0.5, 0.3, 160.0]),
-                ('way41', [1.15, 0.3, 0.0]),
-                ('way42', [1.15, 0.3, 80.0]),
-                ('way43', [1.15, 0.3, -80.0]),
-                ('way44', [1.15, 0.3, 160.0]),
-                ('way51', [1.15, 1.3, 0.0]),
-                ('way52', [1.15, 1.3, 80.0]),
-                ('way53', [1.15, 1.3, -80.0]),
-                ('way54', [1.15, 1.3, 160.0]),
-                ('way61', [1.15, 1.8, 0.0]),
-                ('way62', [1.15, 1.8, 80.0]),
-                ('way63', [1.15, 1.8, -80.0]),
-                ('way64', [1.15, 1.8, 160.0]),
-                ('way71', [1.15, 2.5, 0.0]),
-                ('way72', [1.15, 2.5, 80.0]),
-                ('way73', [1.15, 2.5, -80.0]),
-                ('way74', [1.15, 2.5, 160.0]),
-            ]
-        )
+        parameters = [
+            ('robot1', [-0.1, 2.5, 0.0]),
+            ('robot2', [-0.1, 1.5, 0.0]),
+            ('robot3', [-0.1, 0.3, 0.0]),
+            ('store11', [1.7, 2.8, 160.0]),
+            ('store12', [1.7, 1.7, 160.0]),
+            ('store21', [1.7, 1.3, 160.0]),
+            ('store22', [1.7, 0.3, 160.0]),
+            ('kiosk11', [0.3, 3.2, 80.0]),
+            ('kiosk12', [1.15, 2.8, 80.0]),
+            ('kiosk21', [1.15, 0.5, -80.0]),
+            ('kiosk22', [0.3, 0.5, -80.0]),
+                ]
+        for i in range(1, 8):
+            for j in range(1, 5):
+                parameters.append((f'way{i}{j}', [0.0, 0.0, 0.0]))  # Placeholder values
+
+        self.declare_parameters(namespace='', parameters=parameters)
 
         # Get parameters
-        self.robot1 = self.get_parameter('robot1').value
-        self.robot2 = self.get_parameter('robot2').value
-        self.robot3 = self.get_parameter('robot3').value
-
-        self.store11 = self.get_parameter('store11').value
-        self.store12 = self.get_parameter('store12').value
-        self.store21 = self.get_parameter('store21').value
-        self.store22 = self.get_parameter('store22').value
-
-        self.kiosk11 = self.get_parameter('kiosk11').value
-        self.kiosk12 = self.get_parameter('kiosk12').value
-        self.kiosk21 = self.get_parameter('kiosk21').value
-        self.kiosk22 = self.get_parameter('kiosk22').value
-
-        self.way11 = self.get_parameter('way11').value
-        self.way12 = self.get_parameter('way12').value
-        self.way13 = self.get_parameter('way13').value
-        self.way14 = self.get_parameter('way14').value
-        self.way21 = self.get_parameter('way21').value
-        self.way22 = self.get_parameter('way22').value
-        self.way23 = self.get_parameter('way23').value
-        self.way24 = self.get_parameter('way24').value
-        self.way31 = self.get_parameter('way31').value
-        self.way32 = self.get_parameter('way32').value
-        self.way33 = self.get_parameter('way33').value
-        self.way34 = self.get_parameter('way34').value
-        self.way41 = self.get_parameter('way41').value
-        self.way42 = self.get_parameter('way42').value
-        self.way43 = self.get_parameter('way43').value
-        self.way44 = self.get_parameter('way44').value
-        self.way51 = self.get_parameter('way51').value
-        self.way52 = self.get_parameter('way52').value
-        self.way53 = self.get_parameter('way53').value
-        self.way54 = self.get_parameter('way54').value
-        self.way61 = self.get_parameter('way61').value
-        self.way62 = self.get_parameter('way62').value
-        self.way63 = self.get_parameter('way63').value
-        self.way64 = self.get_parameter('way64').value
-        self.way71 = self.get_parameter('way71').value
-        self.way72 = self.get_parameter('way72').value
-        self.way73 = self.get_parameter('way73').value
-        self.way74 = self.get_parameter('way74').value
+        self.robot_coords = [self.get_parameter(name).value for name in ['robot1', 'robot2', 'robot3']]
+        self.store_coords = [self.get_parameter(name).value for name in ['store11', 'store12', 'store21', 'store22']]
+        self.kiosk_coords = [self.get_parameter(name).value for name in ['kiosk11', 'kiosk12', 'kiosk21', 'kiosk22']]
+        
+        self.waypoints = [
+            self.get_parameter(f'way{i}{j}').value 
+            for i in range(1, 8) 
+            for j in range(1, 5)
+        ]
 
         # Combine all positions into a single list for further processing
-        wayList = [
-            self.way11, self.way12, self.way13, self.way14,
-            self.way21, self.way22, self.way23, self.way24,
-            self.way31, self.way32, self.way33, self.way34,
-            self.way41, self.way42, self.way43, self.way44,
-            self.way51, self.way52, self.way53, self.way54,
-            self.way61, self.way62, self.way63, self.way64,
-            self.way71, self.way72, self.way73, self.way74,
-        ]
-
-        checkpoints = [
-            self.robot1, self.robot2, self.robot3,
-            self.store11, self.store12, self.store21, self.store22,
-            self.kiosk11, self.kiosk12, self.kiosk21, self.kiosk22
-        ]
-
+        wayList = self.waypoints
+        checkpoints = self.robot_coords + self.store_coords + self.kiosk_coords
         all_positions = wayList + checkpoints
         self.print_all_positions(all_positions)
 
