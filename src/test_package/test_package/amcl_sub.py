@@ -12,7 +12,6 @@ class AmclSub(Node):
         self.get_logger().info(f'Received pose: {msg.pose.pose.position.x}, {msg.pose.pose.position.y}, {msg.pose.pose.position.z}')
 
 
-
 def main(args=None):
     rp.init(args=args)
     node = AmclSub()
