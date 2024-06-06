@@ -21,7 +21,7 @@ from time import sleep
 # import pathDict
 
 # ROBOT_NUMBER = "1"
-# ROBOT_NU MBER = "2"
+# ROBOT_NUMBER = "2"
 ROBOT_NUMBER = "3"
 
 class RobotStatus(Enum):
@@ -186,7 +186,7 @@ class DrobotMotor(Node):
     #     elif self.status in [RobotStatus.TO_STORE, RobotStatus.TO_KIOSK]:
     #         pass
     #     # self.send_goal(self.next_postitions[1])
-    #     self.is_checkpoint()
+    #     self.verify_checkpoint()
     #     self.request_robot_arrival(str(self.next_point)) ### temp code
 
     #     # self.check_succeed(self.position)
@@ -248,7 +248,7 @@ class DrobotMotor(Node):
 
         if response.success == True:
             self.request_robot_arrival(str(self.next_point)) ### temp code
-            self.is_checkpoint()
+            self.verify_checkpoint()
 
         return response
 
@@ -257,13 +257,13 @@ class DrobotMotor(Node):
         if diff_dist <= 0.02:
             self.get_logger().info("moving is succeed!")
             # self.request_robot_arrival(int(ROBOT_NUMBER))
-            self.is_checkpoint()
+            self.verify_checkpoint()
         else:
             self.send_goal(self.current_goal)
             self.get_logger().warn("moving is failed!")
 
 
-    def is_checkpoint(self):
+    def verify_checkpoint(self):
         if self.next_point in self.store_points and self.status == RobotStatus.TO_STORE:
             self.update_status()
             self.request_module("ST")
