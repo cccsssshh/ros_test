@@ -23,6 +23,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/OrderInfo.srv"
   "srv/OrderTracking.srv"
   "srv/Module.srv"
+  "srv/RobotArrival.srv"
 )
 
 if(BUILD_TESTING)

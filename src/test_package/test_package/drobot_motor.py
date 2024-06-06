@@ -214,9 +214,9 @@ class DrobotMotor(Node):
     
     def angle_command(self, diff_angle, goal_yaw):
         msg = Twist()
-        msg.
 
-    def go_command(self, diff_x, diff_y):
+
+    # def go_command(self, diff_x, diff_y):
 
 
 
