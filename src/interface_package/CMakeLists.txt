@@ -25,7 +25,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/OrderTracking.srv"
   "srv/Module.srv"
   "srv/NodeNum.srv"
-  "srv/NodeNumTest.srv"
 )
 
 if(BUILD_TESTING)
