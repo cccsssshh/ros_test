@@ -185,7 +185,6 @@ class DrobotMotor(Node):
             self.get_logger().info(f"R-{ROBOT_NUMBER} arrived at Kiosk. So, status updated to {self.status.value}")
         elif self.next_point == (27 + int(ROBOT_NUMBER)) and self.status == RobotStatus.RETURNING:
             self.update_status()
-            self.request_module("HM")
             self.get_logger().info(f"R-{ROBOT_NUMBER} arrived at Home. So, status updated to {self.status.value}")
         else:
             self.get_logger().info("On waypoints")

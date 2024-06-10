@@ -41,7 +41,7 @@ setup(
             "drobot_motor_1 = test_package.drobot_motor_1:main",
             "drobot_motor_2 = test_package.drobot_motor_2:main",
             "drobot_motor_3 = test_package.drobot_motor_3:main",
-
+            "drobot_motor_tmp = test_package.drobot_motor_tmp:main",
         ],
     },
 )
